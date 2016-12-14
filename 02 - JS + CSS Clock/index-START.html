@@ -7,66 +7,126 @@
 <body>
 
 
-    <div class="clock">
-      <div class="clock-face">
-        <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
-        <div class="hand second-hand"></div>
-      </div>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+      <div class="center-circle"> </div>
     </div>
+  </div>
 
 
   <style>
-    html {
-      background:#018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
-      background-size:cover;
-      font-family:'helvetica neue';
-      text-align: center;
-      font-size: 10px;
-    }
+  html {
+    background: #FEFEFE;
+    background-size:cover;
+    font-family:'helvetica neue';
+    text-align: center;
+    font-size: 10px;
+  }
 
-    body {
-      font-size: 2rem;
-      display:flex;
-      flex:1;
-      min-height: 100vh;
-      align-items: center;
-    }
+  body {
+    font-size: 2rem;
+    display:flex;
+    flex:1;
+    min-height: 100vh;
+    align-items: center;
+  }
 
-    .clock {
-      width: 30rem;
-      height: 30rem;
-      border:20px solid white;
-      border-radius:50%;
-      margin:50px auto;
-      position: relative;
-      padding:2rem;
-      box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
-        inset 0 0 0 3px #EFEFEF,
-        inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
-    }
+  .center-circle {
+    position: absolute;
+    top: 48%; right: 47%;
+    bottom: 48%; left: 47%;
+    color: white;
+    background: black;
+    border: thick solid black;
+    border-radius: 50%;
+    height: 1rem;
+    width: 1rem;
+  }
 
-    .clock-face {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
-    }
+  .clock {
+    width: 30rem;
+    height: 30rem;
+    border: 20px solid black;
+    border-radius:50%;
+    margin:50px auto;
+    position: relative;
+    padding:2rem;
+    box-shadow:
+    0 0 0 4px rgba(0,0,0,0.1),
+    inset 0 0 0 3px #121212,
+    inset 0 0 10px black,
+    0 0 10px rgba(0,0,0,0.2);
+  }
 
-    .hand {
-      width:50%;
-      height:6px;
-      background:black;
-      position: absolute;
-      top:50%;
-    }
+  .clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-3px); /* account for the height of the clock hands */
+  }
+
+  .hand {
+    width: 50%;
+    height:6px;
+    background: black;
+    position: absolute;
+    top: 50%;
+    /*  Default is 50%, in the center, 0 is left, 100% is right, we want right*/
+    transform-origin: 100%;
+    /*  Rotate 90deg for 12:00 starting point  */
+    transform: rotate(90deg);
+    /* Apply transitions to all inherited transitionable properties*/
+    transition: all 0.5s;
+    /* Recreate that old clock look with bouncing hands */
+    transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+
+  }
+
+  .min-hand {
+  }
+
+  .hour-hand {
+  }
+
+  .second-hand {
+    background-color: red;
+  }
 
   </style>
-
   <script>
 
+  function setClock() {
+    const hourHand = document.querySelector('.hour-hand');
+    const minHand = document.querySelector('.min-hand');
+    const secondHand = document.querySelector('.second-hand');
+    const now = new Date();
+
+    // Offset the initial 90 degrees
+    const hoursDegrees = getHoursDegrees(now);
+    const minDegrees = getMinHand(now);
+    const secondsDegrees = getSecondsDegrees(now);
+
+    hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+    minHand.style.transform = `rotate(${minDegrees}deg)`;
+    secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+    function getHoursDegrees(date) {
+      return (((date.getHours() / 12) * 360) + 90);
+    }
+
+    function getMinHand(date) {
+      return (((date.getMinutes() / 60) * 360) + 90);
+    }
+
+    function getSecondsDegrees(date) {
+      return (((date.getSeconds() / 60) * 360) + 90);
+    }
+  }
+
+  setInterval(setClock, 1000);
 
   </script>
 </body>
